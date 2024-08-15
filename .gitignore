@@ -1,0 +1,30 @@
+# Ignorar a pasta node_modules
+node_modules/
+
+# Ignorar arquivos de configuração do ambiente
+.env
+
+# Ignorar arquivos de pacotes
+package-lock.json
+
+# Ignorar arquivos gerados pelo sistema operacional
+.DS_Store
+Thumbs.db
+
+# Ignorar logs
+*.log
+
+# Ignorar cache e backups do editor
+.vscode/
+*.swp
+.idea/
+*.bak
+
+# Ignorar o diretório .git
+.git/
+
+# Ignorar o .gitignore para que ele não seja ignorado
+!.gitignore
+
+# Outros arquivos que você queira ignorar
+# Adicione aqui outros arquivos ou diretórios que você deseja ignorar
