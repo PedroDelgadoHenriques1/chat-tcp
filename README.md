@@ -1,19 +1,55 @@
-# Chat TCP em Node.js 🗨️
+Chat TCP em Node.js
+Este projeto implementa um chat simples utilizando sockets TCP em Node.js. Ele consiste em um servidor que gerencia as conexões dos clientes e permite que eles troquem mensagens entre si. O projeto utiliza a biblioteca chalk para formatar a saída no terminal com cores.
 
-Este é um simples aplicativo de chat TCP construído em Node.js. Ele consiste em duas partes principais: um servidor que retransmite mensagens entre os clientes conectados e os próprios clientes que enviam mensagens através do servidor.
+Funcionalidades
+Servidor TCP que aceita conexões de múltiplos clientes.
+Mensagens de Broadcast: Quando um cliente envia uma mensagem, ela é retransmitida para todos os outros clientes conectados.
+Mensagens Coloridas: As mensagens e notificações são exibidas com cores no terminal para facilitar a leitura.
+Pré-requisitos
+Node.js instalado na máquina.
+Instalação
+Clone o repositório:
 
-## Funcionalidades
+bash
+Copiar código
+git clone https://github.com/PedroDelgadoHenriques1/chat-tcp.git
+Navegue até o diretório do projeto:
 
-- 📡 **Servidor**: O servidor ouve conexões de clientes e retransmite as mensagens enviadas por qualquer cliente para todos os outros clientes conectados.
-- 💬 **Cliente**: Os clientes podem enviar mensagens para o servidor, que as encaminha para todos os outros clientes conectados.
-- 🎨 **Chalk**: O projeto utiliza a biblioteca `chalk` para colorir as mensagens no terminal, tornando a experiência mais visualmente agradável.
-
-## Como Usar
-
-### 1. Clonar o Repositório
-
-Clone este repositório em sua máquina local:
-
-```bash
-git clone https://github.com/seu-usuario/chat-tcp.git
+bash
+Copiar código
 cd chat-tcp
+Instale as dependências:
+
+bash
+Copiar código
+npm install
+Uso
+Executando o Servidor
+Inicie o servidor TCP:
+
+bash
+Copiar código
+node server.mjs
+O servidor estará escutando na porta 3000.
+
+Conectando Clientes
+Em outro terminal, inicie um cliente:
+
+bash
+Copiar código
+node client.mjs
+Digite mensagens no terminal do cliente e elas serão enviadas ao servidor, que fará o broadcast para todos os outros clientes conectados.
+
+Testando
+Abra múltiplos terminais e execute node client.mjs em cada um para simular diferentes clientes conectados ao mesmo servidor.
+As mensagens enviadas por um cliente aparecerão em todos os terminais dos outros clientes.
+Estrutura do Projeto
+server.mjs: Código do servidor TCP.
+client.mjs: Código do cliente TCP.
+package.json: Arquivo de configuração do Node.js com as dependências do projeto.
+package-lock.json: Gerenciado automaticamente pelo npm para manter a consistência das versões das dependências.
+.gitignore: Arquivo que especifica os arquivos e diretórios a serem ignorados pelo Git.
+Dependências
+chalk: Biblioteca para adicionar cores ao terminal.
+net: Módulo nativo do Node.js para criar servidores e clientes TCP.
+readline: Módulo nativo do Node.js para ler entradas de dados no terminal.
