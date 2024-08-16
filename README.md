@@ -10,27 +10,7 @@ Node.js instalado na máquina.
 Instalação
 Clone o repositório:
 
-bash
-Copiar código
-git clone https://github.com/PedroDelgadoHenriques1/chat-tcp.git
-Navegue até o diretório do projeto:
-
-bash
-Copiar código
-cd chat-tcp
-Instale as dependências:
-
-bash
-Copiar código
-npm install
-Uso
-Executando o Servidor
-Inicie o servidor TCP:
-
-bash
-Copiar código
-node server.mjs
-O servidor estará escutando na porta 3000.
+entrar na pasta node_modules e executar o npm install
 
 Conectando Clientes
 Em outro terminal, inicie um cliente:
