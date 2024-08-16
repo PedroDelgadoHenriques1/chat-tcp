@@ -8,7 +8,8 @@ const client = net.createConnection({ port: 3000 }, () => {
     console.log(chalk.green('Conectado ao servidor.'));
 });
 
-client.on('data', (data) => {
+client.on('data', async(data) => {
+    console.log(chalk.blue(`cifra será alterada`));
     console.log(chalk.blue(`${data}`));
 });
 

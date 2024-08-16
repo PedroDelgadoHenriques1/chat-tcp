@@ -1,11 +1,15 @@
+const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+
 function cesar(text, shift) {
-    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
     let result = '';
   
-    if (not(text.length > 0)) {
+    if (!(text.length > 0)) {
         throw(e)
     }
-
+    
+    if (shift % shift != 0) {
+        throw(e)
+    }
 
     for (let i = 0; i < text.length; i++) {
       const char = text[i];
@@ -22,6 +26,6 @@ function cesar(text, shift) {
     return result;
   };
 
-x =  cesar("quiabo", 3)
+// x =  cesar("quiabo", 26)
 
-console.log(x)
+// console.log(x)
