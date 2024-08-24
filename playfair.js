@@ -1,4 +1,4 @@
-function prepareKey(key) {
+export function prepareKey(key) {
     key = key.toUpperCase().replace(/J/g, 'I');
     
     let seen = new Set();
@@ -25,7 +25,7 @@ function prepareKey(key) {
     return matrix;
 }
 
-function createMatrix(matrix) {
+export function createMatrix(matrix) {
     let result = [];
     for (let i = 0; i < 5; i++) {
         result.push(matrix.slice(i * 5, i * 5 + 5));
@@ -33,7 +33,7 @@ function createMatrix(matrix) {
     return result;
 }
 
-function prepareMessage(message) {
+export function prepareMessage(message) {
     message = message.toUpperCase().replace(/J/g, 'I').replace(/[^A-Z]/g, '');
     
     // Adiciona 'X' se o comprimento da mensagem for ímpar
@@ -44,7 +44,7 @@ function prepareMessage(message) {
     return message;
 }
 
-function findPosition(matrix, char) {
+export function findPosition(matrix, char) {
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
             if (matrix[i][j] === char) {
@@ -55,7 +55,7 @@ function findPosition(matrix, char) {
     return null;
 }
 
-function encryptMessage(matrix, message) {
+export function encryptMessage(matrix, message) {
     let encryptedMessage = '';
     for (let i = 0; i < message.length; i += 2) {
         let char1 = message[i];
@@ -78,14 +78,14 @@ function encryptMessage(matrix, message) {
     return encryptedMessage;
 }
 
-function playfairCipher(key, message) {
+export function playfairCipher(key, message) {
     let keyMatrix = prepareKey(key);
     let matrix = createMatrix(keyMatrix);
     let preparedMessage = prepareMessage(message);
     return encryptMessage(matrix, preparedMessage);
 }
 
-function decryptMessage(matrix, message) {
+export function decryptMessage(matrix, message) {
     let decryptedMessage = '';
     for (let i = 0; i < message.length; i += 2) {
         let char1 = message[i];
@@ -108,7 +108,7 @@ function decryptMessage(matrix, message) {
     return decryptedMessage;
 }
 
-function playfairDecrypt(key, message) {
+export function playfairDecrypt(key, message) {
     let keyMatrix = prepareKey(key);
     let matrix = createMatrix(keyMatrix);
     let preparedMessage = prepareMessage(message);
@@ -116,7 +116,7 @@ function playfairDecrypt(key, message) {
 }
 
 
-let key = "Playfair Example";
+let key = "Playfair";
 let encryptedMessage = playfairCipher(key, "esconda o ouro sob o carvalho leste");
 let decryptedMessage = playfairDecrypt(key, encryptedMessage);
 

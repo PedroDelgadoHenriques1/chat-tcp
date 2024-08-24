@@ -2,7 +2,7 @@ import {vigenereDecrypt} from './decrypto.js';
 
 export const alfabeto = 'abcdefghijklmnopqrstuvwxyz';
 
-function cesar(msg, chave) {
+export function cesar(msg, chave) {
     let result = '';
   
     if (!(msg.length > 0)) {
@@ -28,11 +28,11 @@ function cesar(msg, chave) {
     return result;
   };
 
-// x =  cesar("quiabo", 26)
+let x = cesar("quiabo", 26)
 
-// console.log(x)
+console.log(x)
 
-function vigenere(msg, chave) {
+export function vigenere(msg, chave) {
     chave = chave.repeat(Math.ceil(msg.length / chave.length))
     let cryptograma = []
  

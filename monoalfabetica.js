@@ -8,7 +8,7 @@ function monoAlfabeticas(text, substitution) {
     // Verifica se o alfabeto de substituição é válido
     if (!validateSubstitution(substitution)) {
         throw new Error('O alfabeto de substituição deve ter 26 letras únicas.');
-    }pbctofgrijklmeanqhsduvwxyz
+    }
 
     for (let i = 0; i < text.length; i++) {
         const char = text[i];

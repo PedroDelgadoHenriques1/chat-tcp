@@ -18,7 +18,5 @@ export function vigenereDecrypt(msg, chave) {
     }
   
 
-    console.log(plaintext.join(''))
-
     return plaintext.join('');
   }
