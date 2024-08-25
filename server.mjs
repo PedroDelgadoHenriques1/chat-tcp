@@ -17,7 +17,7 @@ const server = net.createServer((socket) => {
         // Envia a mensagem para todos os outros clientes
         clients.forEach(client => {
             if (client !== socket) {
-                client.write(chalk.blue(`Mensagem de um cliente: ${message}`)); 
+                client.write(chalk.blue(`${message}`)); 
             }
         });
     });

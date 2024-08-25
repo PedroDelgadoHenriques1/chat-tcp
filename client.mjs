@@ -1,8 +1,8 @@
 import net from 'net';
 import readline from 'readline';
 import chalk from 'chalk';
-import {playfairCipher} from './playfair.js';
-import {alfabeto} from './crypto.js';
+import { playfairCipher } from './playfair.js';
+import { alfabeto } from './crypto.js';
 // import { vigenereDecrypt } from './decrypto.js';
 // import { cesar, vigenere } from './crypto.js';
 // const prompt = require('prompt-sync')({sigint: true});
@@ -128,7 +128,7 @@ function monoAlfabeticas(text, substitution) {
 
     // Verifica se o alfabeto de substituição é válido
     if (!validateSubstitution(substitution)) {
-        throw new Error('O alfabeto de substituição deve ter 26 letras únicas.');
+        throw new Error('O alfabeto de substituição deve ter 26 letras únicas. Exemplo: zbcdefghijklmnopqrstuvwxya');
     }
 
     for (let i = 0; i < text.length; i++) {
@@ -148,7 +148,7 @@ function monoAlfabeticas(text, substitution) {
 }
 
 export function vigenereDecrypt(msg, chave) {
-    const diferenca = chave.repeat(Math.ceil(msg.length / chave.length));
+    const diferenca = chave.repeat(Math.ceil(msg.length / chave.length)); // repete chave dentro do espaço de caracteres da mensagem
     const plaintext = [];
   
     for (let i = 0; i < msg.length; i++) {
@@ -170,7 +170,7 @@ export function vigenereDecrypt(msg, chave) {
 
 export function cesarDecrypt(encryptedMessage, key, alphabet = defaultAlphabet) {
     let decrypted = '';
-    let keyValue = calculateKeyValue(key, alphabet);
+    let keyValue = KeyValue(key, alphabet);
 
     for (let i = 0; i < encryptedMessage.length; i++) {
         let char = encryptedMessage[i].toLowerCase();
