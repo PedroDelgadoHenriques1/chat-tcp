@@ -4,14 +4,15 @@ import chalk from 'chalk';
 
 console.log(chalk.green('Iniciando o cliente...'));
 
-const key = "playfair"
+const key = "fogo"
 
 const client = net.createConnection({ port: 3000 }, () => {
     console.log(chalk.green('Conectado ao servidor.'));
 });
 
 client.on('data', (data) => {
-    let plaintext = playfairDecrypt(key, data)
+    const encryptedMessage = data.toString().trim();
+    let plaintext = playfairDecrypt(key, encryptedMessage)
     console.log(chalk.blue(`Mensagem descriptografa: ${plaintext}`));
 });
 

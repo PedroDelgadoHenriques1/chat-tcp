@@ -12,7 +12,9 @@ const client = net.createConnection({ port: 3000 }, () => {
 });
 
 client.on('data', (data) => {
-    console.log(chalk.blue(`Mensagem recebida: ${vigenereDecrypt(data.toString().trim(), chave)}`));
+    // let plaintext = data.toString().trim();
+    let plaintext = vigenereDecrypt(data.toString(), "fogo")
+    console.log(chalk.blue(`Mensagem recebida: ${plaintext}`));
 });
 
 client.on('end', () => {
@@ -38,16 +40,18 @@ function vigenereEncrypt(msg, key) {
     let cryptograma = [];
     key = key.toLowerCase();
     msg = msg.toLowerCase();
+    let keyIndex = 0;
   
     for (let i = 0; i < msg.length; i++) {
       let char = msg[i];
   
       if (alfabeto.includes(char)) {
-        let keyChar = key[i % key.length];
+        let keyChar = key[keyIndex];
         let shift = alfabeto.indexOf(keyChar);
         let cryptoCharIndex = (alfabeto.indexOf(char) + shift) % alfabeto.length;
         let cryptoChar = alfabeto[cryptoCharIndex];
         cryptograma.push(cryptoChar);
+        keyIndex = (keyIndex + 1) % key.length;
       } else {
         cryptograma.push(char);
       }
@@ -60,19 +64,23 @@ function vigenereEncrypt(msg, key) {
     let plaintext = [];
     key = key.toLowerCase();
     msg = msg.toLowerCase();
+    let keyIndex = 0;
   
     for (let i = 0; i < msg.length; i++) {
       let char = msg[i];
   
       if (alfabeto.includes(char)) {
-        let keyChar = key[i % key.length];
+        let keyChar = key[keyIndex];
         let shift = alfabeto.indexOf(keyChar);
-        let decryptedCharIndex = (alfabeto.indexOf(char) - shift) % alfabeto.length;
+        let charIndex = alfabeto.indexOf(char);
+  
+        let decryptedCharIndex = (charIndex - shift) % alfabeto.length; // subtract shift before calculating decryptedCharIndex
         if (decryptedCharIndex < 0) {
           decryptedCharIndex += alfabeto.length;
         }
         let decryptedChar = alfabeto[decryptedCharIndex];
         plaintext.push(decryptedChar);
+        keyIndex = (keyIndex + 1) % key.length;
       } else {
         plaintext.push(char);
       }
@@ -80,3 +88,15 @@ function vigenereEncrypt(msg, key) {
   
     return plaintext.join('');
   }
+
+
+  function findKey(encryptedMessage, decryptedMessage) {
+    for (let key of alfabeto) {
+      let encrypted = vigenereEncrypt(decryptedMessage, key);
+      if (encrypted === encryptedMessage) {
+        return key;
+      }
+    }
+    return null;
+  }
+  
