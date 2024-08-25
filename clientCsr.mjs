@@ -1,7 +1,9 @@
 import net from 'net';
 import readline from 'readline';
 import chalk from 'chalk';
-import { alfabeto } from './crypto.js'
+import { alfabeto } from './crypto.js';
+
+const voltas = 3
 
 console.log(chalk.green('Iniciando o cliente...'));
 
@@ -10,7 +12,8 @@ const client = net.createConnection({ port: 3000 }, () => {
 });
 
 client.on('data', (data) => {
-    let csr = cesarDecrypt(data)
+    const encryptedMessage = data.toString().trim();
+    let csr = cesarDecrypt(encryptedMessage, voltas);
     console.log(chalk.blue(`Mensagem: ${csr}`));
 });
 
@@ -30,44 +33,47 @@ const rl = readline.createInterface({
 rl.on('line', (input) => {
     if (input === 'cesar') {
         rl.question('Mensagem: ', (msg) => {
-            rl.question('voltas: ', (key) => {
-                let y = cesar(msg, key)
-                console.log(y)
-                y = y.toString()
-                client.write(x);
-            });      
-        });      
+            rl.question('Voltas: ', (key) => {
+                const chave = parseInt(key);
+                if (isNaN(chave)) {
+                    console.error(chalk.red('A chave deve ser um número.'));
+                    return;
+                }
+                let y = cesar(msg, chave);
+                console.log(y);
+                client.write(y);
+            });
+        });
     } else {
         client.write(input);
     }
 });
 
-
 function cesar(msg, chave) {
     let result = '';
-  
+
     if (!(msg.length > 0)) {
-        throw(e)
+        throw new Error('A mensagem não pode estar vazia.');
     }
     
-    if (chave % chave != 0) {
-        throw(e)
+    if (chave === 0 || isNaN(chave)) {
+        throw new Error('A chave deve ser um número diferente de zero.');
     }
 
     for (let i = 0; i < msg.length; i++) {
-      const char = msg[i];
-      const index = alfabeto.indexOf(char.toLowerCase());
-  
-      if (index !== -1) {
-        const newIndex = (index + chave) % alfabeto.length;
-        result += alfabeto[newIndex];
-      } else {
-        result += char;
-      }
+        const char = msg[i];
+        const index = alfabeto.indexOf(char.toLowerCase());
+
+        if (index !== -1) {
+            const newIndex = (index + chave) % alfabeto.length;
+            result += alfabeto[newIndex];
+        } else {
+            result += char;
+        }
     }
-  
+
     return result;
-  };
+}
 
 export function cesarDecrypt(encryptedMessage, key, alphabet = alfabeto) {
     let decrypted = '';
@@ -85,4 +91,9 @@ export function cesarDecrypt(encryptedMessage, key, alphabet = alfabeto) {
     }
 
     return decrypted;
+}
+
+// Função calculateKeyValue que gera o valor da chave
+function calculateKeyValue(key, alphabet) {
+    return key % alphabet.length;
 }
