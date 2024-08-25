@@ -33,3 +33,15 @@ Dependências
 chalk: Biblioteca para adicionar cores ao terminal.
 net: Módulo nativo do Node.js para criar servidores e clientes TCP.
 readline: Módulo nativo do Node.js para ler entradas de dados no terminal.
+
+
+---
+
+Cifras simétricas:
+
+> Chave Nome (args*)
+
+- Csr César (mensagem, voltas)
+- Mn Monoalfabética (mensagem, alfabeto)
+- Pfr Playfair (inicializa, mensagem, chave)
+- Vgr Vigenere (mensagem, chave fixa no código)
