@@ -2,7 +2,8 @@ import net from 'net';
 import readline from 'readline';
 import chalk from 'chalk';
 
-export const alfabeto = 'abcdefghijklmnopqrstuvwxyz';
+const alfabeto = 'abcdefghijklmnopqrstuvwxyz';
+const chave = 'fogo';
 
 console.log(chalk.green('Iniciando o cliente...'));
 
@@ -11,8 +12,7 @@ const client = net.createConnection({ port: 3000 }, () => {
 });
 
 client.on('data', (data) => {
-    let t1 = vigenereDecrypt(data,  "fogo")
-    console.log(chalk.blue(`tentativa 1: ${t1}`));
+    console.log(chalk.blue(`Mensagem recebida: ${vigenereDecrypt(data.toString().trim(), chave)}`));
 });
 
 client.on('end', () => {
@@ -29,35 +29,54 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', (input) => {
-    if (input === 'vigenere') {
-        rl.question('Mensagem: ', (msg) => {
-            rl.question('voltas: ', (key) => {
-            });      
-        });   
-    } else {
-        client.write(input);
-    }
+    let encryptedMessage = vigenereEncrypt(input, chave);
+    console.log("Mensagem criptografada: " + encryptedMessage);
+    client.write(encryptedMessage);
 });
 
-
-
-export function vigenereDecrypt(msg, chave) {
-    const diferenca = chave.repeat(Math.ceil(msg.length / chave.length)); // repete chave dentro do espaço de caracteres da mensagem
-    const plaintext = [];
+function vigenereEncrypt(msg, key) {
+    let cryptograma = [];
+    key = key.toLowerCase();
+    msg = msg.toLowerCase();
   
     for (let i = 0; i < msg.length; i++) {
-      const msgChar = msg[i];
-      if (msgChar != " ") {
-        const keywordChar = diferenca[i];
-        const shift = alfabeto.indexOf(keywordChar);
-    
-        const decryptedChar = alfabeto[(alfabeto.indexOf(msgChar) - shift + 26) % 26];
-        plaintext.push(decryptedChar);
+      let char = msg[i];
+  
+      if (alfabeto.includes(char)) {
+        let keyChar = key[i % key.length];
+        let shift = alfabeto.indexOf(keyChar);
+        let cryptoCharIndex = (alfabeto.indexOf(char) + shift) % alfabeto.length;
+        let cryptoChar = alfabeto[cryptoCharIndex];
+        cryptograma.push(cryptoChar);
       } else {
-        plaintext.push(" ");
+        cryptograma.push(char);
       }
     }
-
-    return plaintext.join("")
-
-}
+  
+    return cryptograma.join('');
+  }
+  
+  function vigenereDecrypt(msg, key) {
+    let plaintext = [];
+    key = key.toLowerCase();
+    msg = msg.toLowerCase();
+  
+    for (let i = 0; i < msg.length; i++) {
+      let char = msg[i];
+  
+      if (alfabeto.includes(char)) {
+        let keyChar = key[i % key.length];
+        let shift = alfabeto.indexOf(keyChar);
+        let decryptedCharIndex = (alfabeto.indexOf(char) - shift) % alfabeto.length;
+        if (decryptedCharIndex < 0) {
+          decryptedCharIndex += alfabeto.length;
+        }
+        let decryptedChar = alfabeto[decryptedCharIndex];
+        plaintext.push(decryptedChar);
+      } else {
+        plaintext.push(char);
+      }
+    }
+  
+    return plaintext.join('');
+  }
