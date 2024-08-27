@@ -14,7 +14,11 @@ const client = net.createConnection({ port: 3000 }, () => {
 client.on('data', (data) => {
     // let plaintext = data.toString().trim();
     let plaintext = vigenereDecrypt(data.toString(), "fogo")
-    console.log(chalk.blue(`Mensagem recebida: ${plaintext}`));
+    if (plaintext) {
+      console.log(chalk.blue(`Mensagem descriptografada: ${plaintext}`));
+  } else {
+      console.error(chalk.red("Erro ao descriptografar a mensagem."));
+  };
 });
 
 client.on('end', () => {
@@ -34,6 +38,8 @@ rl.on('line', (input) => {
     let encryptedMessage = vigenereEncrypt(input, chave);
     console.log("Mensagem criptografada: " + encryptedMessage);
     client.write(encryptedMessage);
+    let plaintext = vigenereDecrypt(encryptedMessage.toString(), "fogo")
+    console.log(chalk.blue(`Mensagem que deve ser recbida: ${plaintext}`));
 });
 
 function vigenereEncrypt(msg, key) {

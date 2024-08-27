@@ -4,20 +4,19 @@ import chalk from 'chalk';
 const clients = [];
 
 const server = net.createServer((socket) => {
-    socket.write(chalk.green('Bem-vindo ao chat!\n'));
+    console.log(chalk.green('Um cliente se conectou.'));
     clients.push(socket);
 
-    // Evento quando o servidor recebe dados do cliente
     socket.on('data', (data) => {
-        const message = data.toString().trim();
-        
-        // Exibe a mensagem recebida no console do servidor
-        console.log(chalk.blue(`Mensagem recebida: ${message}`));
+        const message = data.toString('utf8').trim();
+        const user = `${socket.remoteAddress}:${socket.remotePort}`;
+
+        console.log(chalk.blue(`${user}: ${message}`));
         
         // Envia a mensagem para todos os outros clientes
         clients.forEach(client => {
             if (client !== socket) {
-                client.write(chalk.blue(`${message}`)); 
+                client.write(`${user}: ${message}`);
             }
         });
     });
