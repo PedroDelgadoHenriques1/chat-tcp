@@ -132,11 +132,11 @@ function criarMatrizPlayfair(chave) {
       const [i1, j1] = encontrarIndices(matriz, char1);
       const [i2, j2] = encontrarIndices(matriz, char2);
   
-      if (i1 === i2) { // Mesma linha
+      if (i1 === i2) {
         textoClaro += matriz[i1][(j1 - 1 + 5) % 5] + matriz[i2][(j2 - 1 + 5) % 5];
-      } else if (j1 === j2) { // Mesma coluna
+      } else if (j1 === j2) {
         textoClaro += matriz[(i1 - 1 + 5) % 5][j1] + matriz[(i2 - 1 + 5) % 5][j2];
-      } else { // Diferentes linha e coluna
+      } else {
         textoClaro += matriz[i1][j2] + matriz[i2][j1];
       }
       digrama = '';
