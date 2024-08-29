@@ -5,11 +5,7 @@ node_modules/
 .env
 
 # Ignorar arquivos de pacotes
-<<<<<<< HEAD
-package-lock.json
-=======
 # package-lock.json
->>>>>>> dev
 
 # Ignorar arquivos gerados pelo sistema operacional
 .DS_Store

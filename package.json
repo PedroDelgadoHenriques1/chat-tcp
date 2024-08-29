@@ -1,18 +1,8 @@
 {
-  "name": "chat-tcp",
-  "version": "1.0.0",
-  "description": "Chat TCP simples em Node.js",
-  "main": "server.mjs",
   "type": "module",
-  "scripts": {
-    "start-server": "node server.mjs",
-    "start-client": "node client.mjs"
-  },
   "dependencies": {
     "chalk": "^5.3.0",
-    "net": "^1.0.2"
-
-  },
-  "author": "Seu Nome",
-  "license": "MIT"
+    "net": "^1.0.2",
+    "prompt-sync": "^4.2.0"
+  }
 }
