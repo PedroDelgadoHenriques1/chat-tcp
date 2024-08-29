@@ -34,23 +34,19 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', (input) => {
-    rl.question('Mensagem: ', (msg) => {
         rl.question('chave: ', (key) => {
-            let x = criptografarPlayfair('fogueira', 'fogo')
+            let x = criptografarPlayfair(input, key)
             console.log(`${x}`);
-            let y = descriptografarPlayfair('OGBSHCTO', "fogo")
-            console.log(`texto plano ${y}`);
             client.write(x);
+            console.log(`texto plano ${descriptografarPlayfair(input, key)}`);
         });      
-    });   
 });
 
 function criarMatrizPlayfair(chave) {
-    const alfabeto = 'ABCDEFGHIKLMNOPQRSTUVWXYZ'; // I e J combinados
+    const alfabeto = 'ABCDEFGHIKLMNOPQRSTUVWXYZ';
     let matriz = [];
     let used = {};
   
-    // Adiciona a chave à matriz, removendo duplicatas
     for (let char of chave.toUpperCase()) {
       if (!used[char]) {
         matriz.push(char);
@@ -58,14 +54,13 @@ function criarMatrizPlayfair(chave) {
       }
     }
   
-    // Adiciona as letras restantes do alfabeto à matriz
     for (let char of alfabeto) {
       if (!used[char]) {
         matriz.push(char);
       }
     }
   
-    // Forma a matriz 5x5
+
     return matriz.reduce((acc, char, index) => {
       if (index % 5 === 0) {
         acc.push([]);
@@ -83,22 +78,22 @@ function criarMatrizPlayfair(chave) {
         }
       }
     }
-    return [-1, -1]; // Letra não encontrada
+    return [-1, -1]; 
   }
   
   function criptografarPlayfair(texto, chave) {
     const matriz = criarMatrizPlayfair(chave);
     let textoCifrado = '';
-    let digrama = '';
+    let diagrama = '';
   
     for (let i = 0; i < texto.length; i++) {
       const char = texto[i].toUpperCase();
-      if (char === 'J') digrama += 'I';
-      else digrama += char;
+      if (char === 'J') diagrama += 'I';
+      else diagrama += char;
   
-      if (digrama.length === 2) {
-        const [i1, j1] = encontrarIndices(matriz, digrama[0]);
-        const [i2, j2] = encontrarIndices(matriz, digrama[1]);
+      if (diagrama.length === 2) {
+        const [i1, j1] = encontrarIndices(matriz, diagrama[0]);
+        const [i2, j2] = encontrarIndices(matriz, diagrama[1]);
   
         if (i1 === i2) { // Mesma linha
           textoCifrado += matriz[i1][(j1 + 1) % 5] + matriz[i2][(j2 + 1) % 5];
@@ -107,7 +102,7 @@ function criarMatrizPlayfair(chave) {
         } else { // Diferentes linha e coluna
           textoCifrado += matriz[i1][j2] + matriz[i2][j1];
         }
-        digrama = '';
+        diagrama = '';
       }
     }
   
@@ -117,7 +112,7 @@ function criarMatrizPlayfair(chave) {
   function descriptografarPlayfair(textoCifrado, chave) {
     const matriz = criarMatrizPlayfair(chave);
     let textoClaro = '';
-    let digrama = '';
+    let diagrama = '';
   
     for (let i = 0; i < textoCifrado.length; i += 2) {
       const char1 = textoCifrado[i].toUpperCase();
@@ -126,20 +121,25 @@ function criarMatrizPlayfair(chave) {
       // Verificar se os caracteres são válidos e se o texto cifrado tem comprimento par
       if (!/[A-Z]/.test(char1) || !/[A-Z]/.test(char2)) {
         console.error("Caractere inválido no texto cifrado.");
+        textoClaro += ' ';
         return;
       }
   
       const [i1, j1] = encontrarIndices(matriz, char1);
       const [i2, j2] = encontrarIndices(matriz, char2);
+
+      console.log([i1, j1])
+      console.log([i2, j2])
+
   
-      if (i1 === i2) {
+      if (i1 === i2) { // Mesma linha
         textoClaro += matriz[i1][(j1 - 1 + 5) % 5] + matriz[i2][(j2 - 1 + 5) % 5];
-      } else if (j1 === j2) {
+      } else if (j1 === j2) { // Mesma coluna
         textoClaro += matriz[(i1 - 1 + 5) % 5][j1] + matriz[(i2 - 1 + 5) % 5][j2];
-      } else {
+      } else { // Diferentes linha e coluna
         textoClaro += matriz[i1][j2] + matriz[i2][j1];
       }
-      digrama = '';
+      diagrama = '';
     }
   
     return textoClaro;
