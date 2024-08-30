@@ -58,3 +58,4 @@ function vigenere(msg, chave) {
 vigenere("bombeiro xoxana", "fogo");
 
 vigenereDecrypt("gcspjwxcgcspjwxc", "fogo");
+// fim
