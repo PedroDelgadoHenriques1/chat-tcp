@@ -39,7 +39,7 @@ rl.on('line', (input) => {
     console.log("Mensagem criptografada: " + encryptedMessage);
     client.write(encryptedMessage);
     let plaintext = vigenereDecrypt(encryptedMessage.toString(), "fogo")
-    console.log(chalk.blue(`Mensagem que deve ser recbida: ${plaintext}`));
+    console.log(chalk.blue(`Mensagem que deve ser recebida: ${plaintext}`));
 });
 
 function vigenereEncrypt(msg, key) {
