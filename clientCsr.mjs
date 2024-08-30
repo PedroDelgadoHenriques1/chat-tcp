@@ -13,8 +13,7 @@ const client = net.createConnection({ port: 3000 }, () => {
 
 client.on('data', (data) => {
     const encryptedMessage = data.toString().trim();
-    let csr = cesarDecrypt(encryptedMessage, voltas);
-    console.log(chalk.blue(`Mensagem: ${csr}`));
+    cesarDecrypt(encryptedMessage, voltas);
 });
 
 client.on('end', () => {
@@ -31,23 +30,12 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', (input) => {
-    if (input === 'cesar') {
-        rl.question('Mensagem: ', (msg) => {
-            rl.question('Voltas: ', (key) => {
-                const chave = parseInt(key);
-                if (isNaN(chave)) {
-                    console.error(chalk.red('A chave deve ser um número.'));
-                    return;
-                }
-                let y = cesar(msg, chave);
-                console.log(y);
-                client.write(y);
-            });
-        });
-    } else {
-        client.write(input);
-    }
-});
+        let y = cesar(input, voltas);
+        console.log(cesar);
+        console.log(y);
+        cesarDecrypt(y, voltas);
+        client.write(y);
+    });
 
 function cesar(msg, chave) {
     let result = '';
@@ -89,7 +77,7 @@ export function cesarDecrypt(encryptedMessage, key, alphabet = alfabeto) {
             decrypted += encryptedMessage[i];
         }
     }
-
+    console.log(decrypted)
     return decrypted;
 }
 
