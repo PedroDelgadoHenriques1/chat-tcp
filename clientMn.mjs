@@ -3,6 +3,7 @@ import readline from 'readline';
 import chalk from 'chalk';
 
 const chave = 'zbcdefghijklmnopqrstuvwxya'
+const substitution = 'zbcdefghijklmnopqrstuvwxya'
 
 console.log(chalk.green('Iniciando o cliente...'));
 
@@ -31,18 +32,10 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', (input) => {
-    if (input === 'mono') {
-        rl.question('Mensagem: ', (msg) => {
-            rl.question('Alfabeto de substituição: ', (substitution) => {
-                let encryptedMsg = monoAlfabeticas(msg, substitution);
-                console.log(`Mensagem criptografada: ${encryptedMsg}`);
-                client.write(encryptedMsg);
-            });
-        });
-    } else {
-        client.write(input);
-    }
-});
+    let encryptedMsg = monoAlfabeticas(input, substitution);
+    console.log(`Mensagem criptografada: ${encryptedMsg}`);
+    client.write(encryptedMsg);
+    });
 
 function monoAlfabeticas(text, substitution) {
     const alphabet = 'abcdefghijklmnopqrstuvwxyz';
