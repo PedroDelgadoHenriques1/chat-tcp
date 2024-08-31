@@ -92,6 +92,11 @@ function criptografarPlayfair(texto, chave) {
     let digrama = '';
     let textoSemEspacos = texto.replace(/ /g, ''); // Remove espaços temporariamente
 
+    // Adiciona um caractere de preenchimento se o comprimento do texto for ímpar
+    if (textoSemEspacos.length % 2 !== 0) {
+        textoSemEspacos += 'X'; // 'X' é um caractere de preenchimento comum
+    }
+
     for (let i = 0; i < textoSemEspacos.length; i++) {
         const char = textoSemEspacos[i];
         const charUpper = char.toUpperCase();
@@ -134,11 +139,16 @@ function descriptografarPlayfair(textoCifrado, chave) {
     let digrama = '';
     let textoSemEspacos = textoCifrado.replace(/ /g, ''); // Remove espaços temporariamente
 
+    // Adiciona um caractere de preenchimento se o comprimento do texto cifrado for ímpar
+    if (textoSemEspacos.length % 2 !== 0) {
+        textoSemEspacos += 'X'; // 'X' é um caractere de preenchimento comum
+    }
+
     for (let i = 0; i < textoSemEspacos.length; i += 2) {
         const char1 = textoSemEspacos[i].toUpperCase();
         const char2 = textoSemEspacos[i + 1].toUpperCase();
 
-        // Verificar se os caracteres são válidos e se o texto cifrado tem comprimento par
+        // Verifica se os caracteres são válidos
         if (!/[A-Z]/.test(char1) || !/[A-Z]/.test(char2)) {
             console.error("Caractere inválido no texto cifrado.");
             return;
@@ -154,7 +164,11 @@ function descriptografarPlayfair(textoCifrado, chave) {
         } else {
             textoClaro += matriz[i1][j2] + matriz[i2][j1];
         }
-        digrama = '';
+    }
+
+    // Remove o caractere de preenchimento se estiver no final do texto claro
+    if (textoClaro.endsWith('X')) {
+        textoClaro = textoClaro.slice(0, -1);
     }
 
     // Adiciona espaços de volta no texto claro
@@ -165,7 +179,9 @@ function descriptografarPlayfair(textoCifrado, chave) {
         if (textoCifrado[i] === ' ') {
             textoComEspacos += ' ';
         } else {
-            textoComEspacos += textoClaro[indiceTextoClaro++];
+            if (indiceTextoClaro < textoClaro.length) {
+                textoComEspacos += textoClaro[indiceTextoClaro++];
+            }
         }
     }
 
