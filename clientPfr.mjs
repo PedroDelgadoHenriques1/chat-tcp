@@ -33,24 +33,19 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-rl.on('line', (input) => {
-    rl.question('Mensagem: ', (msg) => {
-        rl.question('Chave: ', (key) => {
-            let x = criptografarPlayfair(msg, key);
-            console.log(`Mensagem criptografada: ${x}`);
-            let y = descriptografarPlayfair(x, key);
-            console.log(`Texto plano: ${y}`);
-            client.write(x);
-        });
-    });
+rl.question('Digite a mensagem: ', (input) => {
+        let x = criptografarPlayfair(input, key);
+        console.log(`Mensagem criptografada: ${x}`);
+        let y = descriptografarPlayfair(x, key);
+        console.log(`Texto plano: ${y}`);
+        client.write(x);
 });
 
 function criarMatrizPlayfair(chave) {
-    const alfabeto = 'ABCDEFGHIKLMNOPQRSTUVWXYZ'; // I e J combinados
+    const alfabeto = 'ABCDEFGHIKLMNOPQRSTUVWXYZ';
     let matriz = [];
     let used = {};
 
-    // Adiciona a chave à matriz, removendo duplicatas
     for (let char of chave.toUpperCase()) {
         if (!used[char] && char !== ' ') {
             matriz.push(char);
@@ -58,14 +53,12 @@ function criarMatrizPlayfair(chave) {
         }
     }
 
-    // Adiciona as letras restantes do alfabeto à matriz
     for (let char of alfabeto) {
         if (!used[char]) {
             matriz.push(char);
         }
     }
 
-    // Forma a matriz 5x5
     return matriz.reduce((acc, char, index) => {
         if (index % 5 === 0) {
             acc.push([]);
@@ -83,14 +76,19 @@ function encontrarIndices(matriz, letra) {
             }
         }
     }
-    return [-1, -1]; // Letra não encontrada
+    return [-1, -1];
 }
 
 function criptografarPlayfair(texto, chave) {
     const matriz = criarMatrizPlayfair(chave);
     let textoCifrado = '';
     let digrama = '';
-    let textoSemEspacos = texto.replace(/ /g, ''); // Remove espaços temporariamente
+    let textoSemEspacos = texto.replace(/ /g, '');
+
+    
+    if (textoSemEspacos.length % 2 !== 0) {
+        textoSemEspacos += 'X';
+    }
 
     for (let i = 0; i < textoSemEspacos.length; i++) {
         const char = textoSemEspacos[i];
@@ -102,43 +100,34 @@ function criptografarPlayfair(texto, chave) {
             const [i1, j1] = encontrarIndices(matriz, digrama[0]);
             const [i2, j2] = encontrarIndices(matriz, digrama[1]);
 
-            if (i1 === i2) { // Mesma linha
+            if (i1 === i2) {
                 textoCifrado += matriz[i1][(j1 + 1) % 5] + matriz[i2][(j2 + 1) % 5];
-            } else if (j1 === j2) { // Mesma coluna
+            } else if (j1 === j2) {
                 textoCifrado += matriz[(i1 + 1) % 5][j1] + matriz[(i2 + 1) % 5][j2];
-            } else { // Diferentes linha e coluna
+            } else {
                 textoCifrado += matriz[i1][j2] + matriz[i2][j1];
             }
             digrama = '';
         }
     }
 
-    // Adiciona espaços de volta no texto cifrado
-    let textoComEspacos = '';
-    let indiceTextoCifrado = 0;
-
-    for (let i = 0; i < texto.length; i++) {
-        if (texto[i] === ' ') {
-            textoComEspacos += ' ';
-        } else {
-            textoComEspacos += textoCifrado[indiceTextoCifrado++];
-        }
-    }
-
-    return textoComEspacos;
+    return textoCifrado;
 }
 
 function descriptografarPlayfair(textoCifrado, chave) {
     const matriz = criarMatrizPlayfair(chave);
     let textoClaro = '';
-    let digrama = '';
-    let textoSemEspacos = textoCifrado.replace(/ /g, ''); // Remove espaços temporariamente
+    let textoSemEspacos = textoCifrado.replace(/ /g, '');
+
+    if (textoSemEspacos.length % 2 !== 0) {
+        console.error("Texto cifrado tem comprimento ímpar.");
+        return;
+    }
 
     for (let i = 0; i < textoSemEspacos.length; i += 2) {
         const char1 = textoSemEspacos[i].toUpperCase();
-        const char2 = textoSemEspacos[i + 1].toUpperCase();
+        const char2 = textoSemEspacos[i + 1]?.toUpperCase();
 
-        // Verificar se os caracteres são válidos e se o texto cifrado tem comprimento par
         if (!/[A-Z]/.test(char1) || !/[A-Z]/.test(char2)) {
             console.error("Caractere inválido no texto cifrado.");
             return;
@@ -154,20 +143,9 @@ function descriptografarPlayfair(textoCifrado, chave) {
         } else {
             textoClaro += matriz[i1][j2] + matriz[i2][j1];
         }
-        digrama = '';
     }
 
-    // Adiciona espaços de volta no texto claro
-    let textoComEspacos = '';
-    let indiceTextoClaro = 0;
+    textoClaro = textoClaro.replace(/X$/, '');
 
-    for (let i = 0; i < textoCifrado.length; i++) {
-        if (textoCifrado[i] === ' ') {
-            textoComEspacos += ' ';
-        } else {
-            textoComEspacos += textoClaro[indiceTextoClaro++];
-        }
-    }
-
-    return textoComEspacos;
+    return textoClaro;
 }
