@@ -1,5 +1,46 @@
+import net from 'net';
+import readline from 'readline';
+import chalk from 'chalk';
+
 let M1 = "Declaramos Paz!";
 let key = 'paz';
+
+
+console.log(chalk.green('Iniciando o cliente...'));
+
+const client = net.createConnection({ port: 3000 }, () => {
+    console.log(chalk.green('Conectado ao servidor.'));
+});
+
+client.on('data', (data) => {
+    let decryptedString = RC4Decrypt(String(data), key);
+    if (decryptedString) {
+      console.log(chalk.blue(`Mensagem descriptografada: ${decryptedString}`));
+  } else {
+      console.error(chalk.red("Erro ao descriptografar a mensagem."));
+  };
+});
+
+client.on('end', () => {
+    console.log(chalk.red('Desconectado do servidor.'));
+});
+
+client.on('error', (err) => {
+    console.error(chalk.red(`Erro: ${err.message}`));
+});
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+rl.on('line', (input) => {
+    let encryptedString = RC4(input, key);
+    console.log("Mensagem criptografada: " + encryptedString);
+    client.write(encryptedString);
+    let plaintext = RC4Decrypt(encryptedString, key);
+    console.log(chalk.blue(`Mensagem que deve ser recbida: ${plaintext}`));
+});
 
 function RC4(M1, key) {
   let S = new Array(256);
@@ -59,10 +100,3 @@ function RC4Decrypt(encryptedString, key) {
   return decryptedString;
 }
 
-
-let resultado = RC4(M1, key);
-console.log(resultado);
-
-let encryptedString = resultado; // use the encrypted string from the previous output
-let decryptedString = RC4Decrypt(encryptedString, key);
-console.log(decryptedString);
