@@ -13,6 +13,17 @@ const server = net.createServer((socket) => {
 
         console.log(chalk.blue(`${user}: ${message}`));
 
+        let asciiValues = [];
+  
+        for (let i = 0; i < message.length; i++) {
+            let charCode = String(message).charCodeAt(i)
+            if (!isNaN(charCode)) { // Check if the charCode is a valid number
+                asciiValues.push(charCode);
+            }
+        }
+        
+        console.log(asciiValues);
+
         clients.forEach(client => {
             if (client !== socket) {
                 client.write(`${message}`);
