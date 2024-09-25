@@ -1,25 +1,25 @@
 //                                                          -----> Passo 0: Criando chaves <----- ! //
-console.log('Step 0: Initialization');
+console.log('Passo 0: Inicialização');
 const mensagem = '0123456789ABCDEF';
 const chave = '0123456789ABCDEF';
 
 
 //                                                          -----> Passo 1: conversão para binário <----- ! //
 console.log('\n\nPasso 1: Convert to binary');
-function hexToBin(hex) {
+function hexParaBin(hex) {
     return hex.split('').map(char => {
         return parseInt(char, 16).toString(2).padStart(4, '0');
     }).join('');
 }
 
-const mensagembinaria = hexToBin(mensagem);
-const chavebinaria = hexToBin(chave);
+const mensagembinaria = hexParaBin(mensagem);
+const chavebinaria = hexParaBin(chave);
 console.log("Mensagem em binário:", mensagembinaria);
 console.log("Chave em binário:", chavebinaria);
 
 
 //                                                          -----> Passo 2: Permutando para 56 bits para Paridade/segurança
-console.log('\n\nPasso 2: Permute the chave through the PC-1 table');
+console.log('\n\nPermutando para 56 bits para Paridade/segurança');
 const PC1 = [
     57, 49, 41, 33, 25, 17, 9,
     1, 58, 50, 42, 34, 26, 18,
@@ -35,21 +35,21 @@ function permuteKey(chavebinaria, table) {
     return table.map(position => chavebinaria[position - 1]).join('');
 }
 
-const permutedKey = permuteKey(chavebinaria, PC1);
-console.log("Chave após permutação PC-1:", permutedKey);
+const permutadaChave = permuteKey(chavebinaria, PC1);
+console.log("Chave após permutação PC-1:", permutadaChave);
 
 
 //                                                          -----> Passo 3: Rotacionando cada metade
 console.log('\n\nPasso 3: Rotating each half');
 const rotations = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1];
 
-function leftRotate(bits, numrotations) {
-    return bits.slice(numrotations) + bits.slice(0, numrotations);
+function leftRotate(bits, numrotacoes) {
+    return bits.slice(numrotacoes) + bits.slice(0, numrotacoes);
 }
 
-function splitKey(permutedKey) {
-    const C0 = permutedKey.slice(0, 28);
-    const D0 = permutedKey.slice(28);
+function splitKey(permutadaChave) {
+    const C0 = permutadaChave.slice(0, 28);
+    const D0 = permutadaChave.slice(28);
     return { C0, D0 };
 }
 
@@ -69,7 +69,7 @@ function rotateHalves(C0, D0, rotations) {
     return roundKeys;
 }
 
-const { C0, D0 } = splitKey(permutedKey);
+const { C0, D0 } = splitKey(permutadaChave);
 const rotatedKeys = rotateHalves(C0, D0, rotations);
 
 rotatedKeys.forEach((chave, index) => {
