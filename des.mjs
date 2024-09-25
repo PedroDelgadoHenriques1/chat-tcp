@@ -1,25 +1,25 @@
 //                                                          -----> Passo 0: Criando chaves <----- ! //
 console.log('Step 0: Initialization');
-const message = '0123456789ABCDEF';
-const key = '0123456789ABCDEF';
+const mensagem = '0123456789ABCDEF';
+const chave = '0123456789ABCDEF';
 
 
 //                                                          -----> Passo 1: conversão para binário <----- ! //
-console.log('\n\nStep 1: Convert to binary');
+console.log('\n\nPasso 1: Convert to binary');
 function hexToBin(hex) {
     return hex.split('').map(char => {
         return parseInt(char, 16).toString(2).padStart(4, '0');
     }).join('');
 }
 
-const messageBinary = hexToBin(message);
-const keyBinary = hexToBin(key);
-console.log("Mensagem em binário:", messageBinary);
-console.log("Chave em binário:", keyBinary);
+const mensagembinaria = hexToBin(mensagem);
+const chavebinaria = hexToBin(chave);
+console.log("Mensagem em binário:", mensagembinaria);
+console.log("Chave em binário:", chavebinaria);
 
 
 //                                                          -----> Passo 2: Permutando para 56 bits para Paridade/segurança
-console.log('\n\nStep 2: Permute the key through the PC-1 table');
+console.log('\n\nPasso 2: Permute the chave through the PC-1 table');
 const PC1 = [
     57, 49, 41, 33, 25, 17, 9,
     1, 58, 50, 42, 34, 26, 18,
@@ -31,16 +31,16 @@ const PC1 = [
     21, 13, 5, 28, 20, 12, 4
 ];
 
-function permuteKey(keyBinary, table) {
-    return table.map(position => keyBinary[position - 1]).join('');
+function permuteKey(chavebinaria, table) {
+    return table.map(position => chavebinaria[position - 1]).join('');
 }
 
-const permutedKey = permuteKey(keyBinary, PC1);
+const permutedKey = permuteKey(chavebinaria, PC1);
 console.log("Chave após permutação PC-1:", permutedKey);
 
 
-//                                                          -----> Passo 3: Rotating each half
-console.log('\n\nStep 3: Rotating each half');
+//                                                          -----> Passo 3: Rotacionando cada metade
+console.log('\n\nPasso 3: Rotating each half');
 const rotations = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1];
 
 function leftRotate(bits, numrotations) {
@@ -72,26 +72,26 @@ function rotateHalves(C0, D0, rotations) {
 const { C0, D0 } = splitKey(permutedKey);
 const rotatedKeys = rotateHalves(C0, D0, rotations);
 
-rotatedKeys.forEach((key, index) => {
-    console.log(`Rodada ${index + 1} - C: ${key.C}, D: ${key.D}`);
+rotatedKeys.forEach((chave, index) => {
+    console.log(`Rodada ${index + 1} - C: ${chave.C}, D: ${chave.D}`);
 });
 
 
-//                                                          -----> Passo 4: Concatenation
-console.log('\n\nStep 4: Concatenation');
+//                                                          -----> Passo 4: Concatenação
+console.log('\n\nPasso 4: Concatenação');
 function concatenateHalves(C, D) {
     return C + D;
 }
 
-const concatenatedKeys = rotatedKeys.map((key, index) => {
-    const concatenatedKey = concatenateHalves(key.C, key.D);
+const concatenatedKeys = rotatedKeys.map((chave, index) => {
+    const concatenatedKey = concatenateHalves(chave.C, chave.D);
     console.log(`Rodada ${index + 1} - Chave concatenada: ${concatenatedKey}`);
     return concatenatedKey;
 });
 
 
-//                                                          -----> Passo 5: Permute the key through the PC-2 table
-console.log('\n\nStep 5: Permute the key through the PC-2 table');
+//                                                          -----> Passo 5: Permutando a chave através da tabela PC-2
+console.log('\n\nPasso 5:  Permutando a chave através da tabela PC-2');
 const PC2 = [
     14, 17, 11, 24, 1, 5,
     3, 28, 15, 6, 21, 10,
@@ -107,15 +107,15 @@ function permutePC2(concatenatedKey) {
     return PC2.map(position => concatenatedKey[position - 1]).join('');
 }
 
-const subKeys = concatenatedKeys.map((key, index) => {
-    const subKey = permutePC2(key);
+const subKeys = concatenatedKeys.map((chave, index) => {
+    const subKey = permutePC2(chave);
     console.log(`Rodada ${index + 1} - Subchave de 48 bits: ${subKey}`);
     return subKey;
 });
 
 
-//                                                          -----> Passo 6: Permute the message through IP
-console.log('\n\nStep 6: Permute the message through IP');
+//                                                          -----> Passo 6: Permute the mensagem through IP
+console.log('\n\nPasso 6: Permute the mensagem through IP');
 const IP = [
     58, 50, 42, 34, 26, 18, 10, 2,
     60, 52, 44, 36, 28, 20, 12, 4,
@@ -127,16 +127,16 @@ const IP = [
     63, 55, 47, 39, 31, 23, 15, 7
 ];
 
-function permuteMessage(messageBinary) {
-    return IP.map(position => messageBinary[position - 1]).join('');
+function permuteMessage(mensagembinaria) {
+    return IP.map(position => mensagembinaria[position - 1]).join('');
 }
 
-const permutedMessage = permuteMessage(messageBinary);
+const permutedMessage = permuteMessage(mensagembinaria);
 console.log("Mensagem após permutação IP:", permutedMessage);
 
 
-//                                                          -----> Passo 7: Encode the data 
-console.log('\n\nStep 7: Encode the data ');
+//                                                          -----> Passo 7: envolve a codificação de dados
+console.log('\n\nPasso 7: envolve a codificação de dados ');
 const E = [
     32, 1, 2, 3, 4, 5,
     4, 5, 6, 7, 8, 9,
@@ -242,8 +242,8 @@ function f(RnMinus1, Kn) {
 
 
 
-//                                                          -----> Passo 8 to Step 23: Computing ROUND 1 to 16
-console.log('\n\nStep 8 to Step 23: Computing ROUND 1 to 16');
+//                                                          -----> Passo 8 até passo 23: Computando a rodada 1 até 16 <-----
+console.log('\n\nPasso 8 até passo 23: Computando a rodada 1 até 16');
 for (let round = 0; round < 16; round++) {
     const Kn = subKeys[round];
     const newR = xorBinary(L, f(R, Kn));
@@ -255,8 +255,8 @@ for (let round = 0; round < 16; round++) {
 }
 
 
-//                                                          -----> Passo 24: Permute the encoded data through the IP-1 table
-console.log('\n\nStep 24: Permute the encoded data through the IP-1 table');
+//                                                          -----> Passo 24: Permute the encoded data through the IP-1 table <-----
+console.log('\n\nPasso 24: Permute the encoded data through the IP-1 table');
 const IP_1 = [
     40, 8, 48, 16, 56, 24, 64, 32,
     39, 7, 47, 15, 55, 23, 63, 31,
@@ -284,8 +284,8 @@ const finalPermutation = applyFinalPermutation(R16L16);
 console.log("Mensagem criptografada final:", finalPermutation);
 
 
-//                                                          -----> Passo 25: Convert back into hexadecimal
-console.log('\n\nStep 25: Convert back into hexadecimal');
+//                                                          -----> Passo 25: Converter novamente para hexadecimal <----- 
+console.log('\n\nPasso 25: Converter novamente para hexadecimal');
 function binaryToHex(binary) {
     let hex = '';
     for (let i = 0; i < binary.length; i += 4) {
