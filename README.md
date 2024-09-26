@@ -45,9 +45,5 @@ Cifras simétricas:
 - Mn Monoalfabética (mensagem, alfabeto)
 - Pfr Playfair (inicializa, mensagem, chave)
 - Vgr Vigenere (mensagem, chave fixa no código)
-- - Rc4
-
-
-  cifras assimétricas:
-
-  - Des
+- Rc4
+- Des
