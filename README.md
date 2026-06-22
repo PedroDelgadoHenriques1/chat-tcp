@@ -1,49 +1,56 @@
-Chat TCP em Node.js
-Este projeto implementa um chat simples utilizando sockets TCP em Node.js. Ele consiste em um servidor que gerencia as conexões dos clientes e permite que eles troquem mensagens entre si. O projeto utiliza a biblioteca chalk para formatar a saída no terminal com cores.
+# chat-tcp — TCP chat + classic ciphers (Node.js)
 
-Funcionalidades
-Servidor TCP que aceita conexões de múltiplos clientes.
-Mensagens de Broadcast: Quando um cliente envia uma mensagem, ela é retransmitida para todos os outros clientes conectados.
-Mensagens Coloridas: As mensagens e notificações são exibidas com cores no terminal para facilitar a leitura.
-Pré-requisitos
-Node.js instalado na máquina.
-Instalação
-Clone o repositório:
+A multi-client **TCP chat** built on raw Node.js sockets, plus a playground of
+**classic ciphers implemented from scratch** — messages can be encrypted with
+Caesar, Monoalphabetic, Playfair, Vigenère, RC4 or DES before they hit the wire.
 
-entrar na pasta node_modules e executar o npm install
+## Architecture
 
-Conectando Clientes
-Em outro terminal, inicie um cliente:
+```mermaid
+flowchart TB
+    C1[Client A] -- encrypted --> S(("TCP Server<br/>net.createServer"))
+    C2[Client B] -- encrypted --> S
+    C3[Client C] -- encrypted --> S
+    S -- broadcast --> C1
+    S -- broadcast --> C2
+    S -- broadcast --> C3
+    subgraph Ciphers["Ciphers from scratch"]
+      CE[Caesar]
+      MN[Monoalphabetic]
+      PF[Playfair]
+      V[Vigenère]
+      R[RC4]
+      D[DES]
+    end
+```
 
-bash
-Copiar código
-node client.mjs
-Digite mensagens no terminal do cliente e elas serão enviadas ao servidor, que fará o broadcast para todos os outros clientes conectados.
+## What's inside
 
-Testando
-Abra múltiplos terminais e execute node client.mjs em cada um para simular diferentes clientes conectados ao mesmo servidor.
-As mensagens enviadas por um cliente aparecerão em todos os terminais dos outros clientes.
-Estrutura do Projeto
-server.mjs: Código do servidor TCP.
-client.mjs: Código do cliente TCP.
-package.json: Arquivo de configuração do Node.js com as dependências do projeto.
-package-lock.json: Gerenciado automaticamente pelo npm para manter a consistência das versões das dependências.
-.gitignore: Arquivo que especifica os arquivos e diretórios a serem ignorados pelo Git.
-Dependências
-chalk: Biblioteca para adicionar cores ao terminal.
-net: Módulo nativo do Node.js para criar servidores e clientes TCP.
-readline: Módulo nativo do Node.js para ler entradas de dados no terminal.
+- **TCP server** (`server.mjs`) — accepts multiple clients and broadcasts each message
+  to all the others, with colorized terminal output via `chalk`.
+- **Cipher suite, hand-written (no crypto libs):**
 
+  | Client | Cipher | Args |
+  |--------|--------|------|
+  | `clientCsr` | **Caesar** | message, shifts |
+  | `clientMn`  | **Monoalphabetic** | message, alphabet |
+  | `clientPfr` | **Playfair** | init, message, key |
+  | `clientVgr` | **Vigenère** | message, key |
+  | `rc4`       | **RC4** stream cipher | — |
+  | `des` / `des_client` | **DES** (full key schedule + permutations) | — |
 
----
+## Run it
 
-Cifras simétricas:
+```bash
+npm install
+node server.mjs     # terminal 1 — server
+node client.mjs     # terminal 2+ — one per client
+```
 
-> Chave Nome (args*)
+Type a message in any client and it's broadcast to all the others. Launch a
+cipher-specific client (e.g. `node clientVgr.mjs`) to send encrypted traffic.
 
-- Csr César (mensagem, voltas)
-- Mn Monoalfabética (mensagem, alfabeto)
-- Pfr Playfair (inicializa, mensagem, chave)
-- Vgr Vigenere (mensagem, chave fixa no código)
-- Rc4
-- Des
+## Stack
+
+Node.js (ESM) · `net` (TCP sockets) · `chalk` · Caesar / Monoalphabetic / Playfair /
+Vigenère / RC4 / DES from scratch
